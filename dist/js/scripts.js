@@ -379,6 +379,51 @@ if (document.querySelector('.block-product-catalog__slider')) {
   });
 }
 
+if (document.querySelector('.catalog-cats__slider')) {
+  const catalogCatsBody = document.querySelector('.catalog-cats__body');
+
+  const toggleEdgeClasses = (swiper) => {
+    catalogCatsBody.classList.toggle('slide-start', swiper.isBeginning);
+    catalogCatsBody.classList.toggle('slide-end', swiper.isEnd);
+  };
+
+  const catalogCatsSwiper = new Swiper('.catalog-cats__slider', {
+    observer: true,
+    observeParents: true,
+    slidesPerView: 'auto',
+    spaceBetween: 8,
+    speed: 800,
+    navigation: {
+      prevEl: '.options-arrow-prev',
+      nextEl: '.options-arrow-next',
+    },
+    on: {
+      init: toggleEdgeClasses,
+      slideChange: toggleEdgeClasses,
+      fromEdge: toggleEdgeClasses,
+      reachBeginning: toggleEdgeClasses,
+      reachEnd: toggleEdgeClasses,
+      resize: toggleEdgeClasses,
+      observerUpdate: toggleEdgeClasses,
+      setTranslate: toggleEdgeClasses,
+    },
+  });
+}
+
+if (document.querySelector('.block-benefits2__slider')) {
+  const swiperBenefits = new Swiper('.block-benefits2__slider', {
+    observer: true,
+    observeParents: true,
+    slidesPerView: 'auto',
+    spaceBetween: 20,
+    speed: 800,
+    navigation: {
+      prevEl: '.benefits2-arrow-prev',
+      nextEl: '.benefits2-arrow-next',
+    },
+  });
+}
+
 //========================================================================================================================================================
 
 Fancybox.bind("[data-fancybox]", {
@@ -1082,6 +1127,28 @@ function tabs() {
 }
 tabs();
 
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('[data-goto-tab]');
+  if (!link) return;
+  e.preventDefault();
+
+  const tabsBlock = document.querySelector('.product-tabs');
+  if (!tabsBlock) return;
+
+  const index = link.dataset.gotoTab;
+  const title = tabsBlock.querySelector(`button[data-tabs-title="${index}"]`);
+
+  if (title && !title.classList.contains('_tab-active')) {
+    title.click();
+  }
+
+  const header = document.querySelector('header');
+  const offset = (header ? header.offsetHeight : 0) + 20;
+  const top = tabsBlock.getBoundingClientRect().top + window.scrollY - offset;
+
+  window.scrollTo({ top, behavior: 'smooth' });
+});
+
 //========================================================================================================================================================
 
 class SelectConstructor {
@@ -1690,3 +1757,345 @@ if (iconElements) {
     });
   });
 }
+
+//========================================================================================================================================================
+
+//Количество
+function formQuantity() {
+  function getUnit(quantityElement) {
+    if (quantityElement.classList.contains('quantity-col')) return '';
+    const item = quantityElement.closest('.product-calc__item');
+    const checked = item ? item.querySelector('.options2__input:checked') : null;
+    return checked ? checked.dataset.col || '' : '';
+  }
+
+  function getMin(quantityElement) {
+    return quantityElement.dataset.quantityMin ? +quantityElement.dataset.quantityMin : 1;
+  }
+
+  function getMax(quantityElement) {
+    return quantityElement.dataset.quantityMax ? +quantityElement.dataset.quantityMax : null;
+  }
+
+  function getNumber(quantityElement) {
+    const input = quantityElement.querySelector('[data-quantity-value]');
+    return parseInt(input.value) || 0;
+  }
+
+  function setValue(quantityElement, number) {
+    const input = quantityElement.querySelector('[data-quantity-value]');
+    const unit = getUnit(quantityElement);
+    const num = number === '' ? '' : String(number);
+    input.value = num && unit ? `${num} ${unit}` : num || unit;
+    return num.length;
+  }
+
+  function updateButtons(quantityElement) {
+    const minusBtn = quantityElement.querySelector('[data-quantity-minus]');
+    const plusBtn = quantityElement.querySelector('[data-quantity-plus]');
+    const value = getNumber(quantityElement);
+    const max = getMax(quantityElement);
+    const min = getMin(quantityElement);
+
+    const minusDisabled = value <= min;
+    const plusDisabled = max !== null && value >= max;
+
+    minusBtn.classList.toggle('disabled', minusDisabled);
+    plusBtn.classList.toggle('disabled', plusDisabled);
+    minusBtn.disabled = minusDisabled;
+    plusBtn.disabled = plusDisabled;
+  }
+
+  document.addEventListener("click", function (e) {
+    const targetElement = e.target;
+    if (targetElement.closest('[data-quantity-plus]') || targetElement.closest('[data-quantity-minus]')) {
+      const quantityElement = targetElement.closest('[data-quantity]');
+      const max = getMax(quantityElement);
+      const min = getMin(quantityElement);
+      let value = getNumber(quantityElement);
+
+      if (targetElement.closest('[data-quantity-plus]')) {
+        value++;
+        if (max !== null && value > max) value = max;
+      } else {
+        value--;
+        if (value < min) value = min;
+      }
+      setValue(quantityElement, value);
+      updateButtons(quantityElement);
+    }
+  });
+
+  document.addEventListener("input", function (e) {
+    const input = e.target.closest('[data-quantity] [data-quantity-value]');
+    if (!input) return;
+    const quantityElement = input.closest('[data-quantity]');
+    const max = getMax(quantityElement);
+
+    let digits = input.value.replace(/\D/g, '');
+    if (digits !== '') {
+      let value = parseInt(digits);
+      if (max !== null && value > max) value = max;
+      digits = String(value);
+    }
+    const len = setValue(quantityElement, digits);
+    input.setSelectionRange(len, len);
+    updateButtons(quantityElement);
+  });
+
+  function keepCaretBeforeUnit(e) {
+    const input = e.target.closest('[data-quantity] [data-quantity-value]');
+    if (!input) return;
+    const len = String(parseInt(input.value) || '').length;
+    if (input.selectionStart > len) input.setSelectionRange(len, len);
+  }
+  document.addEventListener("click", keepCaretBeforeUnit);
+  document.addEventListener("focusin", keepCaretBeforeUnit);
+
+  document.addEventListener("focusout", function (e) {
+    const input = e.target.closest('[data-quantity] [data-quantity-value]');
+    if (!input) return;
+    const quantityElement = input.closest('[data-quantity]');
+    const min = getMin(quantityElement);
+    const value = getNumber(quantityElement);
+    setValue(quantityElement, value < min ? min : value);
+    updateButtons(quantityElement);
+  });
+
+  document.addEventListener("change", function (e) {
+    const radio = e.target.closest('.options2__input');
+    if (!radio) return;
+    const item = radio.closest('.product-calc__item');
+    if (!item) return;
+    item.querySelectorAll('[data-quantity]:not(.quantity-col)').forEach(function (el) {
+      setValue(el, getNumber(el) || getMin(el));
+      updateButtons(el);
+    });
+  });
+
+  document.querySelectorAll('[data-quantity]').forEach(function (el) {
+    setValue(el, getNumber(el) || getMin(el));
+    updateButtons(el);
+  });
+}
+formQuantity();
+
+//========================================================================================================================================================
+
+function productCalc() {
+  const calcs = [...document.querySelectorAll('.product-calc')];
+
+  const selects = [...document.querySelectorAll('.product-select')]
+    .filter(s => s.querySelector('.product-select__dropdown') && !s.closest('.popup'));
+
+  if (!calcs.length && !selects.length) return;
+
+  const popupOwner = new Map();
+
+  const toNum = v => {
+    const n = parseFloat(String(v).replace(/\s/g, '').replace(',', '.'));
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  };
+
+  const fmt = n =>
+    (Math.round(n * 100) / 100).toLocaleString('ru-RU', { maximumFractionDigits: 2 });
+
+  const fmtRub = n => {
+    const r = Math.round(n * 100) / 100;
+    return Number.isInteger(r)
+      ? r.toLocaleString('ru-RU')
+      : r.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+  function applyValue(select, radio) {
+    const item = radio.closest('.options6__item');
+    if (!item) return;
+    const titleEl = item.querySelector('.options6__title');
+    const percentEl = item.querySelector('.options6__percent');
+    if (!titleEl || !percentEl) return;
+
+    const title = titleEl.textContent.trim();
+    const percent = percentEl.textContent.trim();
+
+    select.querySelectorAll('.product-select__title').forEach(el => (el.textContent = title));
+    select.querySelectorAll('.product-select__percent span').forEach(el => (el.textContent = percent));
+  }
+
+  function setText(root, name, text) {
+    root.querySelectorAll(`[data-calc="${name}"]`).forEach(el => (el.textContent = text));
+  }
+
+  function recalc(calc) {
+    const root = calc.closest('.product-right__top') || calc;
+
+    const priceM2 = toNum(calc.dataset.priceM2);
+    const packArea = toNum(calc.dataset.packArea);
+    const packPcs = toNum(calc.dataset.packPcs) || 1;
+    if (!priceM2 || !packArea) return;
+
+    const pricePack = priceM2 * packArea;
+    const pieceArea = packArea / packPcs;
+
+    const unitInput = calc.querySelector('.options2__input:checked');
+    const unit = unitInput ? unitInput.dataset.col : 'м²';
+    const qtyField = calc.querySelector('[data-quantity-value]');
+    const qty = qtyField ? toNum(qtyField.value) : 0;
+
+    const areaPerUnit = unit === 'шт' ? pieceArea : unit === 'упаковка' ? packArea : 1;
+    const area = qty * areaPerUnit;
+
+    const layout = calc.querySelector('.product-select .options6__input:checked');
+    const percent = layout ? toNum(layout.dataset.percent) : 0;
+    const reserve = (area * percent) / 100;
+
+    const packs = area ? Math.ceil((area + reserve) / packArea - 1e-9) : 0;
+    const totalArea = packs * packArea;
+    const totalPcs = packs * packPcs;
+    const leftover = totalArea - area;
+    const total = Math.round(packs * pricePack);
+
+    setText(root, 'price-m2', fmtRub(priceM2));
+    setText(root, 'price-pack', fmtRub(pricePack));
+    setText(root, 'pack-area', fmt(packArea));
+    setText(root, 'pack-pcs', fmt(packPcs));
+
+    setText(root, 'area', fmt(area));
+    setText(root, 'percent', fmt(percent));
+    setText(root, 'reserve', fmt(reserve));
+    setText(root, 'packs', fmt(packs));
+    setText(root, 'leftover', fmt(leftover));
+    setText(root, 'total-area', fmt(totalArea));
+    setText(root, 'total-pcs', fmt(totalPcs));
+    setText(root, 'price-total', fmtRub(total));
+
+    const stock = toNum(calc.dataset.stock);
+    calc.classList.toggle('is-over-stock', !!stock && totalArea > stock);
+  }
+
+  calcs.forEach((calc, i) => {
+    calc.querySelectorAll('.options2__input').forEach(input => {
+      input.name = `calc-unit-${i}`;
+    });
+  });
+
+  selects.forEach((select, i) => {
+    select.querySelectorAll('.options6__input').forEach(input => {
+      input.name = `layout-select-${i}`;
+    });
+    const checked = select.querySelector('.options6__input:checked');
+    if (checked) applyValue(select, checked);
+  });
+
+  document.querySelectorAll('.popup .options6__input').forEach(input => {
+    const popup = input.closest('.popup');
+    if (popup && popup.id) input.name = `layout-popup-${popup.id}`;
+  });
+
+  calcs.forEach(recalc);
+
+  document.addEventListener('click', e => {
+    const qtyBtn = e.target.closest('[data-quantity-minus], [data-quantity-plus]');
+    if (qtyBtn) {
+      const calc = qtyBtn.closest('.product-calc');
+      if (calc) setTimeout(() => recalc(calc), 0);
+    }
+
+    const btn = e.target.closest('.product-select__button:not(.button-popup)');
+    if (btn) {
+      const select = btn.closest('.product-select');
+      if (!select) return;
+      selects.forEach(s => s !== select && s.classList.remove('active'));
+      select.classList.toggle('active');
+      return;
+    }
+
+    const popupBtn = e.target.closest('.product-select__button.button-popup');
+    if (popupBtn) {
+      const select = popupBtn.closest('.product-select');
+      const popup = popupBtn.dataset.popup ? document.querySelector(popupBtn.dataset.popup) : null;
+      if (select && popup) {
+        popupOwner.set(popup.id, select);
+        const current = select.querySelector('.options6__input:checked');
+        if (current) {
+          const target = popup.querySelector(`.options6__input[value="${current.value}"]`);
+          if (target) target.checked = true;
+        }
+      }
+      return;
+    }
+
+    if (!e.target.closest('.product-select')) {
+      selects.forEach(s => s.classList.remove('active'));
+    }
+  });
+
+  document.addEventListener('change', e => {
+    const unit = e.target.closest('.options2__input');
+    if (unit) {
+      const calc = unit.closest('.product-calc');
+      if (calc) recalc(calc);
+      return;
+    }
+
+    const radio = e.target.closest('.options6__input');
+    if (!radio) return;
+
+    const popup = radio.closest('.popup');
+    let select;
+
+    if (popup) {
+      select = popupOwner.get(popup.id);
+      if (!select) return;
+      const mirror = select.querySelector(`.options6__input[value="${radio.value}"]`);
+      if (mirror) mirror.checked = true;
+    } else {
+      select = radio.closest('.product-select');
+      if (!select) return;
+      select.classList.remove('active');
+    }
+
+    applyValue(select, radio);
+
+    const calc = select.closest('.product-calc');
+    if (calc) recalc(calc);
+  });
+
+  document.addEventListener('input', e => {
+    const field = e.target.closest('[data-quantity-value]');
+    if (!field) return;
+    const calc = field.closest('.product-calc');
+    if (calc) recalc(calc);
+  });
+}
+
+productCalc();
+
+//========================================================================================================================================================
+
+document.addEventListener('click', (e) => {
+  const closeBtn = e.target.closest('.menu-product-added__close');
+  if (!closeBtn) return;
+
+  const column = closeBtn.closest('.menu-product-added__column');
+  if (column) {
+    column.remove();
+  }
+});
+
+const bottomMenu = document.querySelector('.bottom-menu');
+
+if (bottomMenu) {
+  const setBottomMenuHeight = () => {
+    document.documentElement.style.setProperty(
+      '--bottom-menu-height',
+      `${bottomMenu.offsetHeight}px`
+    );
+  };
+
+  setBottomMenuHeight();
+
+  new ResizeObserver(setBottomMenuHeight).observe(bottomMenu);
+}
+
+//========================================================================================================================================================
+
