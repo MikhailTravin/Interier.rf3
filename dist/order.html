@@ -1402,11 +1402,606 @@
 						<h1 class="title1">
 							Оформление заказа
 						</h1>
-						<div class="block-cart__content">
+						<form action="#" class="block-cart__content">
 							<div class="block-cart-left">
+								<div class="block-order">
+									<div class="block-order__column">
+										<div class="block-order__title">
+											Способ получения товара
+										</div>
+										<div class="block-order__body">
+											<div class="options7">
+												<label class="options7__item">
+													<input data-opt="self-pickup" class="options7__input options-input" checked type="radio" value="1" name="option7">
+													<span class="options7__label options-label">
+														<span class="options7__left">
+															<span class="options7__icon">
+																<img src="img/icons/warehouse.svg" alt="">
+															</span>
+															<div class="options7__titles">
+																<div class="options7__title">
+																	Самовывоз
+																</div>
+																<p>
+																	Можно забрать товар с нашего склада
+																</p>
+															</div>
+														</span>
+														<span class="options7__check options-check">
+															<svg aria-hidden="true" width="10" height="8">
+																<use xlink:href="img/sprite.svg#check2"></use>
+															</svg>
+														</span>
+													</span>
+												</label>
+												<label class="options7__item">
+													<input data-opt="courier-delivery" class="options7__input options-input" type="radio" value="2" name="option7">
+													<span class="options7__label options-label">
+														<span class="options7__left">
+															<span class="options7__icon">
+																<img src="img/icons/free-delivery.svg" alt="">
+															</span>
+															<div class="options7__titles">
+																<div class="options7__title">
+																	Доставка курьером
+																</div>
+																<p>
+																	Товар приедет по выбранному адресу
+																</p>
+															</div>
+														</span>
+														<span class="options7__check options-check">
+															<svg aria-hidden="true" width="10" height="8">
+																<use xlink:href="img/sprite.svg#check2"></use>
+															</svg>
+														</span>
+													</span>
+												</label>
+											</div>
+											<div data-opt="self-pickup" class="block-order-descr">
+												<div class="block-order-descr__column">
+													<div class="block-order-descr__titles">
+														<div class="block-order-descr__title">
+															Адрес:
+														</div>
+														<p>
+															г. Лобня, Оленьи Пруды 3с1 (территория Промышленный Парк
+															Реал-Север), склад №6 (здание обшитое металлом, не кирпичное).
+														</p>
+													</div>
+													<div class="block-order-descr__works">
+														<div class="block-order-descr__work">
+															<span>ПН-ПТ:</span>
+															<div class="block-order-descr__time">10:00 - 18:00</div>
+														</div>
+														<div class="block-order-descr__work">
+															<span>СБ-ВС:</span>
+															<div class="block-order-descr__time days-off">выходные дни</div>
+														</div>
+													</div>
+												</div>
+												<div class="block-order-descr__column">
+													<div class="block-order-descr__titles">
+														<div class="block-order-descr__title">
+															Как нас найти:
+														</div>
+														<p>
+															При въезде перед КПП остановиться и сообщить охране, что вы
+															следуете на отгрузку в компанию Интерьер.рф.
+															Въезд на территорию бесплатный.
+														</p>
+													</div>
+													<div class="block-order-descr__info">
+														<img src="img/icons/danger-circle.svg" alt="">
+														<span>Срок хранения 3 дня с даты доставки</span>
+													</div>
+												</div>
+											</div>
+											<div data-opt="courier-delivery" class="block-order-delivery">
 
+											</div>
+										</div>
+									</div>
+									<div class="block-order__column">
+										<div class="block-order__title">
+											Данные клиента
+										</div>
+										<div class="block-order__body">
+											<div class="options8">
+												<label class="options8__item">
+													<input data-opt="fiz" class="options8__input options-input" checked type="radio" value="1" name="option8">
+													<div class="options8__label options-label">
+														<span class="options8__check options-check">
+															<svg aria-hidden="true" width="8" height="6">
+																<use xlink:href="img/sprite.svg#check2"></use>
+															</svg>
+														</span>
+														<span class="options8__text">
+															<span class="desc">Физическое лицо</span>
+															<span class="mob">Физ. лицо</span>
+														</span>
+													</div>
+												</label>
+												<label class="options8__item">
+													<input data-opt="yur" class="options8__input options-input" type="radio" value="2" name="option8">
+													<span class="options8__label options-label">
+														<span class="options8__check options-check">
+															<svg aria-hidden="true" width="8" height="6">
+																<use xlink:href="img/sprite.svg#check2"></use>
+															</svg>
+														</span>
+														<span class="options8__text">
+															<span class="desc">Юридическое лицо</span>
+															<span class="mob">Юр. лицо</span>
+														</span>
+													</span>
+												</label>
+											</div>
+											<div data-opt="fiz" class="block-order-form">
+												<div class="block-order-form__inputs">
+													<div class="block-order-form__input">
+														<input data-required autocomplete="off" type="text" name="form[]" data-error="Ошибка" placeholder="Имя" class="input">
+														<div class="placeholder">
+															Имя<span>*</span>
+														</div>
+													</div>
+													<div class="block-order-form__input">
+														<input data-required autocomplete="off" type="text" name="form[]" data-error="Ошибка" placeholder="Телефон*" class="input">
+														<div class="placeholder">
+															Телефон<span>*</span>
+														</div>
+													</div>
+													<div class="block-order-form__input">
+														<input data-required autocomplete="off" type="text" name="form[]" data-error="Ошибка" placeholder="Email" class="input">
+														<div class="placeholder">
+															Email
+														</div>
+													</div>
+												</div>
+												<label class="block-switch">
+													<span class="toggle-switch__text">Заказ получит другой
+														человек</span>
+													<span class="toggle-switch">
+														<input checked type="checkbox">
+														<span class="toggle-switch__background">
+															<span class="toggle-switch__handle"></span>
+														</span>
+													</span>
+												</label>
+											</div>
+											<div data-opt="yur" class="block-order-form">
+												<div class="block-order-form__inputs">
+													<div class="block-order-form__input">
+														<input data-required autocomplete="off" type="text" name="form[]" data-error="Ошибка" placeholder="Имя" class="input">
+														<div class="placeholder">
+															Имя<span>*</span>
+														</div>
+													</div>
+													<div class="block-order-form__input">
+														<input data-required autocomplete="off" type="text" name="form[]" data-error="Ошибка" placeholder="Телефон*" class="input">
+														<div class="placeholder">
+															Телефон<span>*</span>
+														</div>
+													</div>
+													<div class="block-order-form__input">
+														<input data-required autocomplete="off" type="text" name="form[]" data-error="Ошибка" placeholder="Email" class="input">
+														<div class="placeholder">
+															Email
+														</div>
+													</div>
+												</div>
+												<label class="block-switch">
+													<span class="toggle-switch__text">Заказ получит другой
+														человек</span>
+													<span class="toggle-switch">
+														<input checked type="checkbox">
+														<span class="toggle-switch__background">
+															<span class="toggle-switch__handle"></span>
+														</span>
+													</span>
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="block-order__columns">
+										<div class="block-order__column">
+											<div class="block-order__title">
+												Оплата
+											</div>
+											<div class="block-order__body">
+												<div class="options9">
+													<label class="options9__item">
+														<input data-opt="split" class="options9__input" checked type="radio" value="1" name="option9">
+														<span class="options9__label">
+															<span class="options9__left">
+																<span class="options9__icon">
+																	<img src="img/icons/split.svg" alt="">
+																</span>
+																<span class="options9__title">
+																	Сплит-частями
+																</span>
+															</span>
+															<span class="options9__check">
+																<svg aria-hidden="true" width="8" height="6">
+																	<use xlink:href="img/sprite.svg#check2"></use>
+																</svg>
+															</span>
+														</span>
+													</label>
+													<label class="options9__item">
+														<input class="options9__input" type="radio" value="2" name="option9">
+														<span class="options9__label">
+															<span class="options9__left">
+																<span class="options9__icon">
+																	<img src="img/icons/sbp.svg" alt="">
+																</span>
+																<span class="options9__title">
+																	СБП
+																</span>
+															</span>
+															<span class="options9__check">
+																<svg aria-hidden="true" width="8" height="6">
+																	<use xlink:href="img/sprite.svg#check2"></use>
+																</svg>
+															</span>
+														</span>
+													</label>
+													<label class="options9__item">
+														<input class="options9__input" type="radio" value="3" name="option9">
+														<span class="options9__label">
+															<span class="options9__left">
+																<span class="options9__icon">
+																	<img style="width: 20px;" src="img/icons/card-order.svg" alt="">
+																</span>
+																<span class="options9__title">
+																	Картой онлайн
+																</span>
+															</span>
+															<span class="options9__check">
+																<svg aria-hidden="true" width="8" height="6">
+																	<use xlink:href="img/sprite.svg#check2"></use>
+																</svg>
+															</span>
+														</span>
+													</label>
+													<label class="options9__item">
+														<input class="options9__input" type="radio" value="4" name="option9">
+														<span class="options9__label">
+															<span class="options9__left">
+																<span class="options9__icon">
+																	<img style="width: 20px;" src="img/icons/banknote.svg" alt="">
+																</span>
+																<span class="options9__title">
+																	Наличными в офисе
+																</span>
+															</span>
+															<span class="options9__check">
+																<svg aria-hidden="true" width="8" height="6">
+																	<use xlink:href="img/sprite.svg#check2"></use>
+																</svg>
+															</span>
+														</span>
+													</label>
+												</div>
+												<div data-da=".block-order__columns, 768, last" data-opt="split" class="split" data-split data-total="41732">
+													<div class="split__head">
+														<div class="split__logo">
+															<img src="img/icons/split.svg" alt="">
+														</div>
+
+														<div class="split__info">
+															<a class="split__link" href="#">
+																Яндекс Сплит — оплата частями
+																<svg aria-hidden="true" width="6" height="10">
+																	<use xlink:href="img/sprite.svg#arrow2"></use>
+																</svg>
+															</a>
+															<p class="split__price">
+																<b data-split-sum>3970 ₽</b> × <b data-split-count>4</b>
+																<span>без переплат</span>
+															</p>
+														</div>
+
+														<button class="split__hint" type="button" aria-label="Подробнее">
+															<img src="img/icons/info-split.svg" alt="">
+														</button>
+													</div>
+
+													<div class="split__tabs" role="radiogroup" aria-label="Срок рассрочки">
+														<label class="split__tab"><input type="radio" name="split-term" value="2" checked><span>2</span></label>
+														<label class="split__tab"><input type="radio" name="split-term" value="4"><span>4</span></label>
+														<label class="split__tab"><input type="radio" name="split-term" value="6"><span>6</span></label>
+														<label class="split__tab"><input type="radio" name="split-term" value="12"><span>12</span></label>
+														<label class="split__tab"><input type="radio" name="split-term" value="24"><span>24</span></label>
+													</div>
+
+													<ul class="split__schedule">
+														<li class="split__payment split__payment--active"><span data-split-date>сегодня</span><b class="split__sum" data-split-pay>10 433 ₽</b></li>
+														<li class="split__payment"><span data-split-date>19 июл</span><b class="split__sum" data-split-pay>10 433 ₽</b></li>
+														<li class="split__payment"><span data-split-date>2 авг</span><b class="split__sum" data-split-pay>10 433 ₽</b></li>
+														<li class="split__payment"><span data-split-date>16 авг</span><b class="split__sum" data-split-pay>10 433 ₽</b></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="block-order__column">
+										<div class="block-order__title">
+											Комментарий к заказу
+										</div>
+										<div class="block-order__textarea">
+											<textarea placeholder="Пожелания, уточнения и пр"></textarea>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div class="block-cart-right">
+								<div class="block-cart-edit">
+									<div class="block-cart-edit__top">
+										<div class="block-cart-edit__titles">
+											<div class="block-cart-edit__title">
+												Ваш заказ <span>9 товаров</span>
+											</div>
+											<button class="block-cart-edit__button">
+												<span>Развернуть</span>
+												<svg aria-hidden="true" width="5" height="8">
+													<use xlink:href="img/sprite.svg#arrow2"></use>
+												</svg>
+											</button>
+										</div>
+										<div class="block-cart-edit__images">
+											<img src="img/image2.webp" alt="">
+											<img src="img/image2.webp" alt="">
+											<img src="img/image2.webp" alt="">
+											<img src="img/image2.webp" alt="">
+											<img src="img/image2.webp" alt="">
+										</div>
+									</div>
+									<div class="block-cart-edit__dropdown">
+										<div class="block-cart-edit__titles">
+											<div class="block-cart-edit__title">
+												Ваш заказ <span>9 товаров</span>
+											</div>
+											<button class="block-cart-edit__button active">
+												<span>Свернуть</span>
+												<svg aria-hidden="true" width="5" height="8">
+													<use xlink:href="img/sprite.svg#arrow2"></use>
+												</svg>
+											</button>
+										</div>
+										<div data-simplebar class="block-cart-edit__simplebar">
+											<div class="block-cart-edit__cards">
+												<div class="card-cart">
+													<div class="card-cart__content">
+														<div class="card-cart__images">
+															<div class="card-cart__image">
+																<img src="img/image2.webp" alt="" class="card-cart__pic1">
+															</div>
+														</div>
+														<div class="card-cart__body">
+															<div class="card-cart-top">
+																<div class="card-cart-top__name">
+																	Диван Нумо Мини Textile Light
+																</div>
+																<div class="product-prices">
+																	<div class="product-prices__new-price new-price-red">
+																		134 320 ₽
+																	</div>
+																	<div class="product-prices__old-price">
+																		248 640₽
+																	</div>
+																</div>
+															</div>
+															<div class="card-cart-bottom">
+																<div class="card-cart-bottom__left">
+																	<div class="product-left-descr">
+																		<div class="product-left-descr__title">
+																			Выбранная конфигурация:
+																		</div>
+																		<div class="product-left-descr__body">
+																			<ul>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Размеры (Ш х Д х В):
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						120 х 200 х 20 см
+																					</div>
+																				</li>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Цвет:
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						<img src="img/image13.webp" alt="">
+																						Микровелюр Энигма десерт
+																					</div>
+																				</li>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Раскладной механизм:
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						Без механизма
+																					</div>
+																				</li>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Высота опоры:
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						13 см
+																					</div>
+																				</li>
+																			</ul>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="card-cart">
+													<div class="card-cart__content">
+														<div class="card-cart__images">
+															<div class="card-cart__image img-border-white">
+																<img src="img/image12.webp" alt="" class="card-cart__pic1">
+															</div>
+														</div>
+														<div class="card-cart__body">
+															<div class="card-cart-top">
+																<div class="card-cart-top__name">
+																	Диван Нумо Мини Textile Light
+																</div>
+																<div class="product-prices">
+																	<div class="product-prices__new-price new-price-red">
+																		134 320 ₽
+																	</div>
+																	<div class="product-prices__old-price">
+																		248 640₽
+																	</div>
+																</div>
+															</div>
+															<div class="card-cart-bottom">
+																<div class="card-cart-bottom__left">
+																	<div class="product-left-descr">
+																		<div class="product-left-descr__title">
+																			Выбранная конфигурация:
+																		</div>
+																		<div class="product-left-descr__body">
+																			<ul>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Размеры (Ш х Д х В):
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						120 х 200 х 20 см
+																					</div>
+																				</li>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Цвет:
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						<img src="img/image13.webp" alt="">
+																						Микровелюр Энигма десерт
+																					</div>
+																				</li>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Раскладной механизм:
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						Без механизма
+																					</div>
+																				</li>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Высота опоры:
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						13 см
+																					</div>
+																				</li>
+																			</ul>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="card-cart">
+													<div class="card-cart__content">
+														<div class="card-cart__images">
+															<div class="card-cart__image">
+																<img src="img/image2.webp" alt="" class="card-cart__pic1">
+															</div>
+														</div>
+														<div class="card-cart__body">
+															<div class="card-cart-top">
+																<div class="card-cart-top__name">
+																	Диван Нумо Мини Textile Light
+																</div>
+																<div class="product-prices">
+																	<div class="product-prices__new-price new-price-red">
+																		134 320 ₽
+																	</div>
+																	<div class="product-prices__old-price">
+																		248 640₽
+																	</div>
+																</div>
+															</div>
+															<div class="card-cart-bottom">
+																<div class="card-cart-bottom__left">
+																	<div class="product-left-descr">
+																		<div class="product-left-descr__title">
+																			Выбранная конфигурация:
+																		</div>
+																		<div class="product-left-descr__body">
+																			<ul>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Размеры (Ш х Д х В):
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						120 х 200 х 20 см
+																					</div>
+																				</li>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Цвет:
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						<img src="img/image13.webp" alt="">
+																						Микровелюр Энигма десерт
+																					</div>
+																				</li>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Раскладной механизм:
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						Без механизма
+																					</div>
+																				</li>
+																				<li>
+																					<div class="product-left-descr__name">
+																						Высота опоры:
+																					</div>
+																					<span></span>
+																					<div class="product-left-descr__value">
+																						13 см
+																					</div>
+																				</li>
+																			</ul>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="block-cart-edit__bottom">
+											<a href="./" class="btn btn-white3">
+												<span>Редактировать заказ</span>
+											</a>
+										</div>
+									</div>
+								</div>
 								<div class="block-cart-right__body">
 									<div class="block-cart-right__top">
 										<form action="#" class="block-cart-promo">
@@ -1417,30 +2012,6 @@
 												<button type="submit" class="btn btn-white2">
 													<span>Применить</span>
 												</button>
-											</div>
-										</form>
-										<form action="#" class="block-cart-promo filled">
-											<div class="block-cart-promo__inputs">
-												<div class="block-cart-promo__input">
-													<div class="block-cart-promo__check">
-														<svg aria-hidden="true" width="8" height="6">
-															<use xlink:href="img/sprite.svg#check1"></use>
-														</svg>
-													</div>
-													<input autocomplete="off" type="text" name="form[]" placeholder="" value="HELLO1500">
-													<button type="button" class="block-cart-promo__delete">
-														<svg aria-hidden="true" width="12" height="12">
-															<use xlink:href="img/sprite.svg#close"></use>
-														</svg>
-													</button>
-												</div>
-												<button type="submit" class="btn btn-white2">
-													<span>Отменить</span>
-												</button>
-											</div>
-
-											<div class="block-cart-promo__text">
-												Промокод применён · скидка 1 500 ₽
 											</div>
 										</form>
 										<div class="block-cart-bonuses">
@@ -1515,46 +2086,22 @@
 												<span>Итого:</span>
 												<div class="block-cart-right__total">120 980 ₽</div>
 											</div>
-											<a href="./" class="btn">
-												<span>Перейти к оформлению</span>
-											</a>
+											<button type="submit" class="btn">
+												<span>Оформить заказ</span>
+											</button>
 										</div>
-									</div>
-								</div>
-								<div class="block-help1">
-									<img loading="lazy" src="img/icons/bg3.svg" alt="" class="block-help1__bg1">
-									<div class="block-help1__items">
-										<img loading="lazy" src="img/image7.webp" alt="" class="block-help1__pic1">
-										<div class="block-help1__item">
-											<div class="block-help1__titles">
-												<div class="block-help1__title">
-													Нужна помощь?
-												</div>
-												<p>
-													Дизайнер-комплектатор
-													интерьер.рф ответит на&nbsp;них
-												</p>
-											</div>
-											<div class="socials">
-												<a href="./">
-													<svg aria-hidden="true" width="15" height="12">
-														<use xlink:href="img/sprite.svg#telegramm"></use>
-													</svg>
-												</a>
-												<a href="./">
-													<svg aria-hidden="true" width="16" height="15">
-														<use xlink:href="img/sprite.svg#max"></use>
-													</svg>
-												</a>
-											</div>
-											<a href="./" class="btn btn-white">
-												<span>Оставить заявку</span>
-											</a>
-										</div>
+										<p>
+											При оформлении заказа мы осуществляем обработку ваших персональных данных.
+											Указывая свой контактный номер телефона,
+											вы подтверждаете ознакомление с <a href="./">договором-оферты</a> и условиями <a href="./">
+												обработки
+												персональных данных
+											</a>.
+										</p>
 									</div>
 								</div>
 							</div>
-						</div>
+						</form>
 					</div>
 				</div>
 

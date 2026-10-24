@@ -2099,3 +2099,614 @@ if (bottomMenu) {
 
 //========================================================================================================================================================
 
+document.querySelectorAll('.block-cart-edit').forEach((block) => {
+  const dropdown = block.querySelector('.block-cart-edit__dropdown');
+  const openBtn = block.querySelector('.block-cart-edit__top .block-cart-edit__button');
+  const closeBtn = block.querySelector('.block-cart-edit__dropdown .block-cart-edit__button');
+
+  if (!dropdown || !openBtn || !closeBtn) return;
+
+  openBtn.addEventListener('click', () => {
+    dropdown.classList.add('active');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    dropdown.classList.remove('active');
+  });
+});
+
+//========================================================================================================================================================
+
+function initOrderOptions() {
+  document.querySelectorAll('.block-order').forEach((root) => {
+    const radios = root.querySelectorAll('input[type="radio"][name]');
+    const names = [...new Set([...radios].map((r) => r.name))];
+
+    names.forEach((name) => {
+      const group = root.querySelectorAll(`input[type="radio"][name="${name}"]`);
+
+      const keys = [...group].map((r) => r.dataset.opt).filter(Boolean);
+      if (!keys.length) return;
+
+      const update = () => {
+        const checked = [...group].find((r) => r.checked);
+        const value = checked ? checked.dataset.opt : undefined;
+
+        root.querySelectorAll('[data-opt]').forEach((el) => {
+          if (el.matches('input') || !keys.includes(el.dataset.opt)) return;
+          el.classList.toggle('active', el.dataset.opt === value);
+        });
+      };
+
+      group.forEach((r) => r.addEventListener('change', update));
+      update();
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initOrderOptions);
+
+//========================================================================================================================================================
+
+function updateFilled(el) {
+  if (!el || !el.parentElement) return;
+  if (['checkbox', 'radio', 'file', 'hidden', 'submit', 'button'].includes(el.type)) return;
+  const filled = el.value.trim() !== '';
+  el.classList.toggle('filled', filled);
+  el.parentElement.classList.toggle('filled', filled);
+}
+
+function formFieldsInit(options = { viewPass: true, autoHeight: false }) {
+  document.body.addEventListener("focusin", function (e) {
+    const targetElement = e.target;
+    if ((targetElement.tagName === 'INPUT' || targetElement.tagName === 'TEXTAREA')) {
+      if (!targetElement.hasAttribute('data-no-focus-classes')) {
+        targetElement.classList.add('_form-focus');
+        targetElement.parentElement.classList.add('_form-focus');
+      }
+      formValidate.removeError(targetElement);
+      targetElement.hasAttribute('data-validate') ? formValidate.removeError(targetElement) : null;
+    }
+  });
+  document.body.addEventListener("focusout", function (e) {
+    const targetElement = e.target;
+    if ((targetElement.tagName === 'INPUT' || targetElement.tagName === 'TEXTAREA')) {
+      if (!targetElement.hasAttribute('data-no-focus-classes')) {
+        targetElement.classList.remove('_form-focus');
+        targetElement.parentElement.classList.remove('_form-focus');
+      }
+      updateFilled(targetElement);
+      targetElement.hasAttribute('data-validate') ? formValidate.validateInput(targetElement) : null;
+    }
+  });
+  document.body.addEventListener("input", function (e) {
+    const targetElement = e.target;
+    if (targetElement.tagName === 'INPUT' || targetElement.tagName === 'TEXTAREA') {
+      updateFilled(targetElement);
+    }
+  });
+  document.querySelectorAll('input, textarea').forEach(updateFilled);
+  window.addEventListener('load', () => {
+    document.querySelectorAll('input, textarea').forEach(updateFilled);
+    setTimeout(() => {
+      document.querySelectorAll('input, textarea').forEach(updateFilled);
+    }, 300);
+  });
+  if (options.viewPass) {
+    document.addEventListener("click", function (e) {
+      const targetElement = e.target;
+      if (targetElement.closest('.form__viewpass')) {
+        const viewpassBlock = targetElement.closest('.form__viewpass');
+        const input = viewpassBlock.closest('.form__input').querySelector('input');
+
+        if (input) {
+          const isActive = viewpassBlock.classList.contains('_viewpass-active');
+          input.setAttribute("type", isActive ? "password" : "text");
+          viewpassBlock.classList.toggle('_viewpass-active');
+        } else {
+          console.error('Input не найден!');
+        }
+      }
+    });
+  }
+  if (options.autoHeight) {
+    const textareas = document.querySelectorAll('textarea[data-autoheight]');
+    if (textareas.length) {
+      textareas.forEach(textarea => {
+        const startHeight = textarea.hasAttribute('data-autoheight-min') ?
+          Number(textarea.dataset.autoheightMin) : Number(textarea.offsetHeight);
+        const maxHeight = textarea.hasAttribute('data-autoheight-max') ?
+          Number(textarea.dataset.autoheightMax) : Infinity;
+        setHeight(textarea, Math.min(startHeight, maxHeight))
+        textarea.addEventListener('input', () => {
+          if (textarea.scrollHeight > startHeight) {
+            textarea.style.height = `auto`;
+            setHeight(textarea, Math.min(Math.max(textarea.scrollHeight, startHeight), maxHeight));
+          }
+        });
+      });
+      function setHeight(textarea, height) {
+        textarea.style.height = `${height}px`;
+      }
+    }
+  }
+}
+formFieldsInit({
+  viewPass: true,
+  autoHeight: false
+});
+
+let formValidate = {
+  getErrors(form) {
+    let error = 0;
+    let formRequiredItems = form.querySelectorAll('*[data-required]');
+    if (formRequiredItems.length) {
+      formRequiredItems.forEach(formRequiredItem => {
+        if ((formRequiredItem.offsetParent !== null || formRequiredItem.tagName === "SELECT") && !formRequiredItem.disabled) {
+          error += this.validateInput(formRequiredItem);
+        }
+      });
+    }
+    return error;
+  },
+  validateInput(formRequiredItem) {
+    let error = 0;
+
+    if (formRequiredItem.dataset.required === "email") {
+      formRequiredItem.value = formRequiredItem.value.replace(" ", "");
+      if (this.emailTest(formRequiredItem)) {
+        this.addError(formRequiredItem);
+        this.removeSuccess(formRequiredItem);
+        error++;
+      } else {
+        this.removeError(formRequiredItem);
+        this.addSuccess(formRequiredItem);
+      }
+    } else if (formRequiredItem.type === "checkbox" && !formRequiredItem.checked) {
+      this.addError(formRequiredItem);
+      this.removeSuccess(formRequiredItem);
+      error++;
+    } else if (formRequiredItem.dataset.validate === "password-confirm") {
+      const passwordInput = document.getElementById('password');
+      if (!passwordInput) return error;
+
+      if (formRequiredItem.value !== passwordInput.value) {
+        this.addError(formRequiredItem);
+        this.removeSuccess(formRequiredItem);
+        error++;
+      } else {
+        this.removeError(formRequiredItem);
+        this.addSuccess(formRequiredItem);
+      }
+    } else {
+      if (!formRequiredItem.value.trim()) {
+        this.addError(formRequiredItem);
+        this.removeSuccess(formRequiredItem);
+        error++;
+      } else {
+        this.removeError(formRequiredItem);
+        this.addSuccess(formRequiredItem);
+      }
+    }
+
+    return error;
+  },
+  addError(formRequiredItem) {
+    formRequiredItem.classList.add('_form-error');
+    formRequiredItem.parentElement.classList.add('_form-error');
+    let inputError = formRequiredItem.parentElement.querySelector('.form__error');
+    if (inputError) formRequiredItem.parentElement.removeChild(inputError);
+    if (formRequiredItem.dataset.error) {
+      formRequiredItem.parentElement.insertAdjacentHTML('beforeend', `<div class="form__error">${formRequiredItem.dataset.error}</div>`);
+    }
+  },
+  removeError(formRequiredItem) {
+    formRequiredItem.classList.remove('_form-error');
+    formRequiredItem.parentElement.classList.remove('_form-error');
+    if (formRequiredItem.parentElement.querySelector('.form__error')) {
+      formRequiredItem.parentElement.removeChild(formRequiredItem.parentElement.querySelector('.form__error'));
+    }
+  },
+  addSuccess(formRequiredItem) {
+    formRequiredItem.classList.add('_form-success');
+    formRequiredItem.parentElement.classList.add('_form-success');
+  },
+  removeSuccess(formRequiredItem) {
+    formRequiredItem.classList.remove('_form-success');
+    formRequiredItem.parentElement.classList.remove('_form-success');
+  },
+  formClean(form) {
+    form.reset();
+    setTimeout(() => {
+      let inputs = form.querySelectorAll('input,textarea');
+      for (let index = 0; index < inputs.length; index++) {
+        const el = inputs[index];
+        el.parentElement.classList.remove('_form-focus');
+        el.classList.remove('_form-focus');
+
+        el.classList.remove('_form-success');
+        el.parentElement.classList.remove('_form-success');
+
+        el.classList.remove('filled');
+        el.parentElement.classList.remove('filled');
+
+        formValidate.removeError(el);
+
+        if (el.classList.contains('telephone') && el.clearFilled) {
+          el.clearFilled();
+        }
+      }
+
+      let checkboxes = form.querySelectorAll('.checkbox__input');
+      if (checkboxes.length > 0) {
+        for (let index = 0; index < checkboxes.length; index++) {
+          const checkbox = checkboxes[index];
+          checkbox.checked = false;
+          checkbox.classList.remove('_form-success');
+          checkbox.closest('.checkbox')?.classList.remove('_form-success');
+        }
+      }
+
+      if (modules_flsModules.select) {
+        let selects = form.querySelectorAll('div.select');
+        if (selects.length) {
+          for (let index = 0; index < selects.length; index++) {
+            const select = selects[index].querySelector('select');
+            modules_flsModules.select.selectBuild(select);
+          }
+        }
+      }
+    }, 0);
+  },
+  emailTest(formRequiredItem) {
+    return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,8})+$/.test(formRequiredItem.value);
+  }
+};
+
+function formSubmit() {
+  const forms = document.forms;
+  if (forms.length) {
+    for (const form of forms) {
+      form.addEventListener('submit', function (e) {
+        const form = e.target;
+        formSubmitAction(form, e);
+      });
+      form.addEventListener('reset', function (e) {
+        const form = e.target;
+        formValidate.formClean(form);
+      });
+    }
+  }
+
+  async function formSubmitAction(form, e) {
+    let hasError = false;
+
+    if (hasError) {
+      e.preventDefault();
+      const firstError = form.querySelector('._form-error');
+      if (firstError) {
+        firstError.focus();
+      }
+      return;
+    }
+
+    const error = !form.hasAttribute('data-no-validate') ? formValidate.getErrors(form) : 0;
+
+    if (error === 0) {
+      const ajax = form.hasAttribute('data-ajax');
+
+      if (ajax) {
+        e.preventDefault();
+
+        const customSelects = form.querySelectorAll('.select');
+
+        customSelects.forEach(selectItem => {
+          const originalSelect = selectItem.querySelector('select');
+          if (!originalSelect) return;
+
+          let contactMethod = 'Не выбран';
+          let contactValue = 'Не указан';
+
+          const selectedOption = originalSelect.options[originalSelect.selectedIndex];
+
+          if (selectedOption && selectedOption.value) {
+            if (selectedOption.dataset.custom === 'true') {
+              contactMethod = originalSelect.dataset.currentMethod || 'Не выбран';
+              contactValue = originalSelect.dataset.userInput || selectedOption.value;
+            } else {
+              contactMethod = selectedOption.dataset.value || selectedOption.value;
+              contactValue = selectedOption.value;
+              originalSelect.dataset.currentMethod = contactMethod;
+            }
+          }
+
+          const oldMethodInput = form.querySelector('input[name="contact_method"]');
+          const oldValueInput = form.querySelector('input[name="user_contact_value"]');
+          if (oldMethodInput) oldMethodInput.remove();
+          if (oldValueInput) oldValueInput.remove();
+
+          const methodInput = document.createElement('input');
+          methodInput.type = 'hidden';
+          methodInput.name = 'contact_method';
+          methodInput.value = contactMethod;
+          form.appendChild(methodInput);
+
+          const valueInput = document.createElement('input');
+          valueInput.type = 'hidden';
+          valueInput.name = 'user_contact_value';
+          valueInput.value = contactValue;
+          form.appendChild(valueInput);
+        });
+
+        const formAction = form.getAttribute('action') ? form.getAttribute('action').trim() : '#';
+        const formMethod = form.getAttribute('method') ? form.getAttribute('method').trim() : 'GET';
+        const formData = new FormData(form);
+
+        form.classList.add('_sending');
+
+        try {
+          const response = await fetch(formAction, {
+            method: formMethod,
+            body: formData
+          });
+
+          if (response.ok) {
+            const textResponse = await response.text();
+
+            try {
+              let responseResult = JSON.parse(textResponse);
+
+              form.classList.remove('_sending');
+
+              if (responseResult.success) {
+                formSent(form, responseResult);
+
+                setTimeout(() => {
+                  form.reset();
+                  const allSelects = form.querySelectorAll('select');
+                  allSelects.forEach(select => {
+                    delete select.dataset.userInput;
+                    delete select.dataset.currentMethod;
+                    const customOpt = select.querySelector('option[data-custom="true"]');
+                    if (customOpt) customOpt.remove();
+                    Array.from(select.options).forEach(option => {
+                      if (option.dataset.originalValue) {
+                        option.value = option.dataset.originalValue;
+                        delete option.dataset.originalValue;
+                      }
+                    });
+                    select.selectedIndex = 0;
+                  });
+                }, 500);
+
+              } else {
+                alert("Ошибка: " + (responseResult.message || "Неизвестная ошибка"));
+              }
+            } catch (parseError) {
+              alert("Ошибка: сервер вернул неверный формат данных");
+            }
+          } else {
+            alert("Ошибка сервера: " + response.status);
+            form.classList.remove('_sending');
+          }
+        } catch (error) {
+          alert("Ошибка отправки формы: " + error.message);
+          form.classList.remove('_sending');
+        }
+      } else if (form.hasAttribute('data-dev')) {
+        e.preventDefault();
+        formSent(form);
+      }
+    } else {
+      e.preventDefault();
+      if (form.querySelector('._form-error') && form.hasAttribute('data-goto-error')) {
+        const formGoToErrorClass = form.dataset.gotoError ? form.dataset.gotoError : '._form-error';
+        gotoBlock(formGoToErrorClass, true, 1000);
+      }
+    }
+  }
+
+  function formSent(form, responseResult = ``) {
+    document.dispatchEvent(new CustomEvent("formSent", {
+      detail: {
+        form: form
+      }
+    }));
+
+    const telephoneInputs = form.querySelectorAll('.telephone');
+    telephoneInputs.forEach(input => {
+      input.value = '';
+      input.classList.remove('filled');
+      const parent = input.closest('.form__input');
+      if (parent) {
+        parent.classList.remove('filled');
+      }
+    });
+
+    const fileInputs = form.querySelectorAll('input[type="file"]');
+    fileInputs.forEach(fileInput => {
+      fileInput.value = '';
+      const formFile = fileInput.closest('.form-file');
+      if (formFile) {
+        const formFileInput = formFile.querySelector('.form-file__input');
+        if (formFileInput) {
+          const originalText = formFileInput.dataset.originalText || 'Прикрепить текущий расчет / КП';
+          formFileInput.textContent = originalText;
+        }
+      }
+    });
+
+    const customSelects = form.querySelectorAll('.select');
+    customSelects.forEach(selectItem => {
+      const originalSelect = selectItem.querySelector('select');
+      if (originalSelect) {
+        const customOption = originalSelect.querySelector('option[data-custom="true"]');
+        if (customOption) {
+          customOption.remove();
+        }
+
+        Array.from(originalSelect.options).forEach(option => {
+          if (option.dataset.originalValue) {
+            option.value = option.dataset.originalValue;
+            delete option.dataset.originalValue;
+          }
+        });
+
+        originalSelect.selectedIndex = 0;
+
+        delete originalSelect.dataset.userInput;
+        delete originalSelect.dataset.currentMethod;
+
+        const contentInput = selectItem.querySelector('.select__content');
+        if (contentInput) {
+          contentInput.value = '';
+          contentInput.classList.remove('filled');
+          if (contentInput.parentElement) contentInput.parentElement.classList.remove('filled');
+          const placeholder = originalSelect.dataset.placeholder || '';
+          contentInput.placeholder = placeholder;
+        }
+
+        selectItem.classList.remove('_select-active');
+
+        const optionButtons = selectItem.querySelectorAll('.select__option');
+        optionButtons.forEach(btn => {
+          btn.hidden = false;
+        });
+
+        if (!originalSelect.hasAttribute('data-show-selected')) {
+          const firstOption = selectItem.querySelector('.select__option[data-value]');
+          if (firstOption && originalSelect.selectedIndex === 0) {
+            firstOption.hidden = true;
+          }
+        }
+
+        if (typeof SelectConstructor !== 'undefined') {
+          const selectInstance = new SelectConstructor({ init: false });
+          selectInstance.setSelectTitleValue(selectItem, originalSelect);
+        }
+      }
+    });
+
+    const hiddenInputs = form.querySelectorAll('input[type="hidden"]');
+    hiddenInputs.forEach(input => {
+      if (input.name === 'button_subject' ||
+        input.name === 'contact_method' ||
+        input.name === 'user_contact_value') {
+        input.value = '';
+      }
+    });
+
+    if (typeof formValidate !== 'undefined' && formValidate.formClean) {
+      formValidate.formClean(form);
+    }
+
+    const popupSelector = form.dataset.popupMessage;
+    let popup = null;
+
+    if (popupSelector) {
+      if (popupSelector.startsWith('#')) {
+        popup = document.querySelector(popupSelector);
+      } else {
+        popup = document.querySelector(`[data-popup="${popupSelector}"]`) ||
+          document.querySelector(`.${popupSelector.replace('.', '')}`);
+      }
+    }
+
+    document.querySelectorAll('.popup_show').forEach(p => {
+      p.classList.remove('popup_show');
+      p.setAttribute('aria-hidden', 'true');
+    });
+
+    if (popup) {
+      if (typeof popupOpen === 'function') {
+        popupOpen(popupSelector);
+      }
+      else if (typeof openPopup === 'function') {
+        openPopup(popup);
+      }
+      else {
+        popup.classList.add('popup_show');
+        popup.setAttribute('aria-hidden', 'false');
+
+        document.documentElement.classList.add('lock', 'popup-show');
+
+        if (typeof bodyLock === 'function') {
+          bodyLock();
+        } else if (typeof bodyLockToggle === 'function') {
+          bodyLockToggle();
+        } else {
+          document.body.style.overflow = 'hidden';
+          document.body.style.paddingRight = '17px';
+        }
+      }
+
+      document.documentElement.classList.remove('open-quiz');
+
+      const closePopupHandler = function (e) {
+        if (e.target === popup || e.target.closest('.popup__close') || e.target.closest('[data-close]')) {
+          popup.classList.remove('popup_show');
+          popup.setAttribute('aria-hidden', 'true');
+          document.documentElement.classList.remove('lock', 'popup-show');
+          document.body.style.overflow = '';
+          document.body.style.paddingRight = '';
+          document.removeEventListener('click', closePopupHandler);
+        }
+      };
+
+      setTimeout(() => {
+        document.addEventListener('click', closePopupHandler);
+      }, 100);
+
+    } else {
+      window.location.href = 'thanks.html';
+    }
+  }
+}
+
+formSubmit();
+
+//========================================================================================================================================================
+
+const splitBlocks = document.querySelectorAll('[data-split]');
+
+const fmtMoney = (n) =>
+  new Intl.NumberFormat('ru-RU').format(Math.round(n)).replace(/\u00A0/g, ' ') + ' ₽';
+
+const fmtDate = (d) =>
+  d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }).replace('.', '');
+
+splitBlocks.forEach((block) => {
+  const total = Number(block.dataset.total);
+  const radios = block.querySelectorAll('input[name="split-term"]');
+  const sumEl = block.querySelector('[data-split-sum]');
+  const countEl = block.querySelector('[data-split-count]');
+  const dates = block.querySelectorAll('[data-split-date]');
+  const pays = block.querySelectorAll('[data-split-pay]');
+
+  const update = () => {
+    const term = Number(block.querySelector('input[name="split-term"]:checked').value);
+
+    const isShort = term === 2;
+    const count = isShort ? 4 : term;
+    const payment = total / count;
+
+    sumEl.textContent = fmtMoney(payment);
+    countEl.textContent = count;
+
+    dates.forEach((el, i) => {
+      if (i === 0) {
+        el.textContent = 'сегодня';
+        return;
+      }
+      const d = new Date();
+      if (isShort) d.setDate(d.getDate() + 14 * i);
+      else d.setMonth(d.getMonth() + i);
+      el.textContent = fmtDate(d);
+    });
+
+    pays.forEach((el) => (el.textContent = fmtMoney(payment)));
+  };
+
+  radios.forEach((r) => r.addEventListener('change', update));
+  update();
+});
