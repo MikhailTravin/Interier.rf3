@@ -29,6 +29,18 @@
       opacity: 1;
     }
   }
+  .open-menu-services & {
+    @media (min-width: 1201px) {
+      &::after {
+        content: "";
+        opacity: 1;
+      }
+      .header {
+        z-index: 150;
+        border-radius: 0px 0px 40px 40px;
+      }
+    }
+  }
 }
 
 .main {

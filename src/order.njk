@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>Оформление заказа</title>
+    {% include 'blocks/head.njk' %}
+</head>
+
+<body class="preload mp">
+    <div class="main-wrapper-outer">
+        {% include 'blocks/header.njk' %}
+        <main class="main main-new main-bg">
+
+            <div class="block-cart">
+                <div class="container">
+                    <h1 class="title1">
+                        Оформление заказа
+                    </h1>
+                    <div class="block-cart__content">
+                        <div class="block-cart-left">
+
+                        </div>
+                        <div class="block-cart-right">
+                            <div class="block-cart-right__body">
+                                <div class="block-cart-right__top">
+                                    <form action="#" class="block-cart-promo">
+                                        <div class="block-cart-promo__inputs">
+                                            <div class="block-cart-promo__input">
+                                                <input autocomplete="off" type="text" name="form[]"
+                                                    placeholder="Введите промокод">
+                                            </div>
+                                            <button type="submit" class="btn btn-white2">
+                                                <span>Применить</span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                    <form action="#" class="block-cart-promo filled">
+                                        <div class="block-cart-promo__inputs">
+                                            <div class="block-cart-promo__input">
+                                                <div class="block-cart-promo__check">
+                                                    <svg aria-hidden="true" width="8" height="6">
+                                                        <use xlink:href="img/sprite.svg#check1"></use>
+                                                    </svg>
+                                                </div>
+                                                <input autocomplete="off" type="text" name="form[]" placeholder=""
+                                                    value="HELLO1500">
+                                                <button type="button" class="block-cart-promo__delete">
+                                                    <svg aria-hidden="true" width="12" height="12">
+                                                        <use xlink:href="img/sprite.svg#close"></use>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <button type="submit" class="btn btn-white2">
+                                                <span>Отменить</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="block-cart-promo__text">
+                                            Промокод применён · скидка 1 500 ₽
+                                        </div>
+                                    </form>
+                                    <div class="block-cart-bonuses">
+                                        <div class="block-cart-bonuses__top">
+                                            <div class="block-cart-bonuses__title">
+                                                <span>Оплатить часть бонусами</span>
+                                                <div class="block-cart-bonuses__text">
+                                                    <img src="img/icons/star1.svg" alt="">
+                                                    3255
+                                                </div>
+                                            </div>
+                                            <label class="toggle-switch">
+                                                <input checked type="checkbox">
+                                                <span class="toggle-switch__background">
+                                                    <span class="toggle-switch__handle"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <p>
+                                            Бонусами можно оплатить до 50% от стоимости товаров
+                                        </p>
+                                    </div>
+                                    <div class="block-cart-login">
+                                        <div class="block-cart-login__text">
+                                            Войдите, чтобы списать бонусы
+                                        </div>
+                                        <a href="./" class="btn">
+                                            <span>Войти</span>
+                                        </a>
+                                    </div>
+                                    <ul class="block-cart-right__list">
+                                        <li>
+                                            <div class="block-cart-right__name">
+                                                13 товаров
+                                            </div>
+                                            <div class="block-cart-right__value">
+                                                248 640 ₽
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="block-cart-right__name">
+                                                Скидка по акции (22%)
+                                            </div>
+                                            <div class="block-cart-right__value value-red">
+                                                - 48 640 ₽
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="block-cart-right__name">
+                                                <span>Начислим за заказ (5%)</span>
+                                                <div class="block-cart-info">
+                                                    <button type="button" class="block-cart-info__button">
+                                                        <svg aria-hidden="true" width="15" height="15">
+                                                            <use xlink:href="img/sprite.svg#info"></use>
+                                                        </svg>
+                                                    </button>
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="block-cart-right__value value-red2">
+                                                <img src="img/icons/star1.svg" alt="">
+                                                <span>+3255</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="block-cart-right__bottoms">
+                                    <div class="block-cart-right__bottom">
+                                        <div class="block-cart-right__totals">
+                                            <span>Итого:</span>
+                                            <div class="block-cart-right__total">120 980 ₽</div>
+                                        </div>
+                                        <a href="./" class="btn">
+                                            <span>Перейти к оформлению</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-help1">
+                                <img loading="lazy" src="img/icons/bg3.svg" alt="" class="block-help1__bg1">
+                                <div class="block-help1__items">
+                                    <img loading="lazy" src="img/image7.webp" alt="" class="block-help1__pic1">
+                                    <div class="block-help1__item">
+                                        <div class="block-help1__titles">
+                                            <div class="block-help1__title">
+                                                Нужна помощь?
+                                            </div>
+                                            <p>
+                                                Дизайнер-комплектатор
+                                                интерьер.рф ответит на&nbsp;них
+                                            </p>
+                                        </div>
+                                        <div class="socials">
+                                            <a href="./">
+                                                <svg aria-hidden="true" width="15" height="12">
+                                                    <use xlink:href="img/sprite.svg#telegramm"></use>
+                                                </svg>
+                                            </a>
+                                            <a href="./">
+                                                <svg aria-hidden="true" width="16" height="15">
+                                                    <use xlink:href="img/sprite.svg#max"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <a href="./" class="btn btn-white">
+                                            <span>Оставить заявку</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'blocks/benefits.njk' %}
+
+        </main>
+    </div>
+    {% include 'blocks/scripts.njk' %}
+</body>
+
+</html>
