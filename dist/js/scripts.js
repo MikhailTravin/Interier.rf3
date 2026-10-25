@@ -514,7 +514,8 @@ class Popup {
     document.addEventListener("click", function (e) {
       const buttonOpen = e.target.closest(`[${this.options.attributeOpenButton}]`);
       if (buttonOpen) {
-        e.preventDefault();
+        const isFormControl = buttonOpen.matches('input[type="radio"], input[type="checkbox"]');
+        if (!isFormControl) e.preventDefault();
         this._dataValue = buttonOpen.getAttribute(this.options.attributeOpenButton) ? buttonOpen.getAttribute(this.options.attributeOpenButton) : "error";
         this.youTubeCode = buttonOpen.getAttribute(this.options.youtubeAttribute) ? buttonOpen.getAttribute(this.options.youtubeAttribute) : null;
         if ("error" !== this._dataValue) {
@@ -2710,3 +2711,110 @@ splitBlocks.forEach((block) => {
   radios.forEach((r) => r.addEventListener('change', update));
   update();
 });
+
+//========================================================================================================================================================
+
+const mapElement = document.querySelector('#map1');
+
+if (mapElement) {
+  const mapObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        mapObserver.unobserve(mapElement);
+
+        if (typeof ymaps === 'undefined') {
+          const script = document.createElement('script');
+          script.src = 'https://api-maps.yandex.ru/2.1/?lang=ru_RU';  // ← Проверьте URL
+          script.async = true;
+
+          script.onload = () => {
+            if (typeof ymaps !== 'undefined') {
+              ymaps.ready(safeInitMap);  // ← Используем ymaps.ready
+            }
+          };
+
+          script.onerror = () => {
+            console.error('Yandex Maps failed to load');
+          };
+
+          document.head.appendChild(script);
+        } else {
+          ymaps.ready(safeInitMap);  // ← Запускаем через ymaps.ready
+        }
+      }
+    });
+  }, {
+    rootMargin: '0px 0px 200px 0px'
+  });
+
+  mapObserver.observe(mapElement);
+}
+
+function safeInitMap() {
+  const mapElement = document.getElementById('map1');
+  if (!mapElement || mapElement.dataset.initialized === 'true') return;
+
+  try {
+    const preview = mapElement.querySelector('.map-preview');
+    if (preview) preview.remove();
+
+    const myMap = new ymaps.Map('map1', {
+      center: [59.890857, 30.411512],
+      zoom: 17,
+      controls: ['zoomControl']
+    });
+
+    const placemark = new ymaps.Placemark([59.890175, 30.411566], {}, {
+      iconLayout: 'default#image',
+      iconImageHref: 'img/icons/location.svg',
+      iconImageSize: [68, 76],
+      iconImageOffset: [-14, -36]
+    });
+
+    myMap.geoObjects.add(placemark);
+    mapElement.dataset.initialized = 'true';
+
+  } catch (error) {
+    console.error("Map init error:", error);
+  }
+}
+
+//========================================================================================================================================================
+
+const mql = window.matchMedia('(max-width: 992px)');
+const toggle = document.querySelector('.popup-courier-delivery .toggle-switch input');
+const info = document.querySelector('.popup-courier-delivery .order-form-info');
+
+if (toggle && info) {
+  toggle.addEventListener('change', () => {
+    if (mql.matches) {
+      if (toggle.checked) {
+        modules_flsModules.popup.open('#order-form-info');
+      }
+    } else {
+      info.classList.toggle('active', toggle.checked);
+    }
+  });
+
+  mql.addEventListener('change', () => {
+    info.classList.toggle('active', !mql.matches && toggle.checked);
+  });
+}
+
+//========================================================================================================================================================
+
+const popupDelivery = document.querySelector('.popup-delivery');
+const openDeliveryBtn = document.querySelector('.order-form-switch__more');
+const closeDeliveryBtn = document.querySelector('[data-delivery-close]');
+
+if (popupDelivery && openDeliveryBtn) {
+  openDeliveryBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    popupDelivery.classList.add('active');
+  });
+
+  closeDeliveryBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    popupDelivery.classList.remove('active');
+  });
+}
