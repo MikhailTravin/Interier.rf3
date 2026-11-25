@@ -1116,3 +1116,72 @@ function JCTitleSearch(arParams) {
 ; /* /local/components/bitrix/search.title/script.js?174610666613294*/
 
 //# sourceMappingURL=template_82fc9d6aea9d9d5c2516904bc4034659.map.js
+
+var tmpCoords = null;
+document.addEventListener("DOMContentLoaded", function () {
+    var test = document.querySelector('.page-wrapper');
+
+    //nouislider
+    if ($(".catalog-filter").length) {
+
+        const slider = document.querySelectorAll(".range-slider");
+
+        slider.forEach((sliderElement) => {
+
+            const filterInputs = sliderElement
+                .closest(".catalog-filter__wrapper")
+                .querySelectorAll(".input-filter");
+
+            const sliderMin = parseInt(sliderElement.dataset.min);
+            const sliderMax = parseInt(sliderElement.dataset.max);
+            const sliderStepStart = parseInt(sliderElement.dataset.stepStart);
+            const sliderStepEnd = parseInt(sliderElement.dataset.stepEnd);
+
+            noUiSlider.create(sliderElement, {
+                start: [sliderStepStart, sliderStepEnd],
+                connect: true,
+                step: 1,
+                range: {
+                    min: [sliderMin],
+                    max: [sliderMax],
+                },
+            });
+
+            const handles = sliderElement.querySelectorAll('.noUi-handle');
+
+            handles.forEach((handle, index) => {
+                const tooltip = document.createElement('div');
+                tooltip.className = 'slider-tooltip';
+                tooltip.dataset.handleIndex = index;
+                handle.appendChild(tooltip);
+            });
+
+            const updateTooltips = (values) => {
+                handles.forEach((handle, index) => {
+                    const tooltip = handle.querySelector('.slider-tooltip');
+                    if (tooltip) {
+                        tooltip.textContent = Math.round(values[index]);
+                    }
+                });
+            };
+
+            updateTooltips([sliderStepStart, sliderStepEnd]);
+
+            sliderElement.noUiSlider.on("update", (values, handle) => {
+                filterInputs[handle].value = Math.round(values[handle]);
+                updateTooltips(values);
+            });
+
+            sliderElement.noUiSlider.on('change.one', (values, handle) => {
+                $(filterInputs[handle]).trigger('keyup');
+            });
+
+            filterInputs.forEach((input, indexInput) => {
+                input.addEventListener("input", () => {
+                    input.value = input.value.replace(/\D/g, "");
+                    sliderElement.noUiSlider.setHandle(indexInput, input.value);
+                });
+            });
+        });
+    }
+});
